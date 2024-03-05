@@ -37,6 +37,11 @@ const MainNavbar = () => {
               <NavDropdown.Item href="#action/3.3">Menu</NavDropdown.Item>
             </NavDropdown>
 
+            <NavDropdown title="My Creations" id="creations-dropdown">
+              <NavDropdown.Item href="#action/3.1">My Dishes</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">My Menus</NavDropdown.Item>
+            </NavDropdown>
+
             <div className="nav-link">Good to see you {user.username}!</div>
             </>
           )}
