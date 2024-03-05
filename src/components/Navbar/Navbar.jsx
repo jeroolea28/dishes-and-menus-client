@@ -3,6 +3,8 @@ import { AuthContext } from "../../context/auth.context";
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 
+import './Navbar.css'
+
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -16,10 +18,10 @@ const MainNavbar = () => {
 
 
   return (
-    <Navbar fixed= 'top' expand="lg" className="bg-body-tertiary">
+    <Navbar bg="dark" data-bs-theme="dark" fixed= 'top' expand="lg" className="bg-body-tertiary">
       <NavLink to='/' className='navbar-brand'>Dishes and Menus</NavLink>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
+      <Navbar.Collapse id="basic-navbar-nav" className="NavbarSpacing">
         <Nav className="me-auto">
           { !isLoggedIn && (
             <>
@@ -35,7 +37,7 @@ const MainNavbar = () => {
               <NavDropdown.Item href="#action/3.3">Menu</NavDropdown.Item>
             </NavDropdown>
 
-            <p className="nav-link">Good to see you {user.username}!</p>
+            <div className="nav-link">Good to see you {user.username}!</div>
             </>
           )}
         </Nav>
