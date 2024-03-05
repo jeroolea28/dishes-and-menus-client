@@ -21,8 +21,12 @@ const MainNavbar = () => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-          <NavLink to={'/login'} className={'nav-link'}>Login</NavLink>
-          <NavLink to={'/signup'} className={'nav-link'}>Signup</NavLink>
+          { !isLoggedIn && (
+            <>
+            <NavLink to={'/login'} className={'nav-link'}>Login</NavLink>
+            <NavLink to={'/signup'} className={'nav-link'}>Signup</NavLink>
+            </>
+        )}
           { isLoggedIn && (
             <>
             <button onClick={logout} className="nav-link">Logout</button>
@@ -31,7 +35,7 @@ const MainNavbar = () => {
               <NavDropdown.Item href="#action/3.3">Menu</NavDropdown.Item>
             </NavDropdown>
 
-            <p>Good to see you {user.username}!</p>
+            <p className="nav-link">Good to see you {user.username}!</p>
             </>
           )}
         </Nav>

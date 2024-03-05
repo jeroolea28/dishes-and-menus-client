@@ -29,7 +29,7 @@ function AuthProviderWrapper(props) {
                     headers: { Authorization: `Bearer ${storedToken}` }
                 })
                 .then((response) => {
-                    const { userInfo } = response.data;
+                    const userInfo  = response.data;
                     setIsLoggedIn(true);
                     setUser(userInfo);
                 })
