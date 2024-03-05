@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.App {
+  min-height: 100vh;
+
+}
