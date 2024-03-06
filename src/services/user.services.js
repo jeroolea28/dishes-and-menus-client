@@ -1,6 +1,6 @@
 import axios from "axios"
 
-class ProjectServices {
+class UserServices {
 
     constructor() {
 
@@ -19,15 +19,9 @@ class ProjectServices {
             return config
         })
     }
-
-
-    getAllProjects = () => {
-        return this.axiosApp.get(`/api/projects`)
-    }
-
-    saveProject = projectInfo => {
-        return this.axiosApp.post(`/api/projects`, projectInfo)
+    login(formData) {
+        return this.axiosApp.post("/api/auth/login", formData);
     }
 }
 
-export default new ProjectServices()
+export default new UserServices()

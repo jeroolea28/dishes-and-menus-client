@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthContext } from "../../context/auth.context";
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import './Navbar.css'
 
@@ -33,7 +33,7 @@ const MainNavbar = () => {
             <>
             <button onClick={logout} className="nav-link">Logout</button>
             <NavDropdown title="Create" id="create-dropdown">
-              <NavDropdown.Item href="#action/3.1">Dish</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to={'/dish/create'}>Dish</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">Menu</NavDropdown.Item>
             </NavDropdown>
 

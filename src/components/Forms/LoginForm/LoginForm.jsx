@@ -1,10 +1,11 @@
 import { useState, useContext } from "react"
-import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
-import { AuthContext } from "../../context/auth.context"
+import { AuthContext } from "../../../context/auth.context"
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import UserServices from "../../../services/user.services"
 import './LoginForm.css'
+
 
 const API_URL = "http://localhost:5005"
 
@@ -27,8 +28,9 @@ function LoginForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios
-            .post(`${API_URL}/api/auth/login`, formData)
+
+        UserServices
+            .login(formData)
             .then((response) => {
                 storeToken(response.data.authToken)
                 authenticateUser()
