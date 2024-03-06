@@ -2,8 +2,8 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useContext, useState } from "react"
 import axios from "axios"
-import { Link, useNavigate } from "react-router-dom"
-import { AuthContext } from "../../../context/auth.context"
+import { Link, useNavigate } from "react-router-dom"    
+import userServices from '../../../services/user.services'
 import './SignupForm.css'
 
 const API_URL = "http://localhost:5005"
@@ -29,18 +29,15 @@ function SignupForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios
-            .post(`${API_URL}/api/auth/signup`, formData)
-            .then(() => {
-                navigate('/login')
-            })
-            .catch((error) => {
-                const errorDescription = error.response.data.message
-                setErrorMessage(errorDescription)
-            })
+        userServices.signup(formData)
+          .then(() => {
+            navigate("/login")
+          })
+          .catch((error) => {
+            const errorDescription = error.response.data.message
+            setErrorMessage(errorDescription)
+        })
     }
-
-
 
   return (
     <div className='SignupForm'>

@@ -19,8 +19,17 @@ class UserServices {
             return config
         })
     }
+
     login(formData) {
         return this.axiosApp.post("/api/auth/login", formData);
+    }
+
+    signup(formData) {
+        return this.axiosApp.post("/api/auth/signup", formData);
+      }
+
+    checkAuth(){
+        return this.axiosApp.get('/api/auth/verify')
     }
 }
 
