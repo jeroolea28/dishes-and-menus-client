@@ -1,28 +1,32 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import './DishForm.css';
+import { useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import './DishForm.css'
+import dishServices from '../../../services/dish.services'
 
 function DishForm() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     name: '',
     price: '',
     description: '',
-    ingredients: [],
+    ingredients: [],    
     spiciness: 'Not Spicy',
     vegetarian: false,
     vegan: false,
-  });
+  }
+
+  const [formData, setFormData] = useState(initialFormData)
+  const [successMessage, setSuccessMessage] = useState('')
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleIngredientAdd = () => {
     if (formData.newIngredient.trim() !== '') {
@@ -30,35 +34,62 @@ function DishForm() {
         ...prevData,
         ingredients: [...prevData.ingredients, prevData.newIngredient.trim()],
         newIngredient: '',
-      }));
+      }))
     }
-  };
+  }
 
   const handleIngredientInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+    const { name, value, key } = e.target
+    if (key === 'Enter') {
+      e.preventDefault()
+      handleIngredientAdd()
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }))
+    }
+  }
 
   const handleIngredientRemove = (index) => {
     setFormData((prevFormData) => {
-      const updatedIngredients = [...prevFormData.ingredients];
-      updatedIngredients.splice(index, 1);
-      return { ...prevFormData, ingredients: updatedIngredients };
-    });
-  };
+      const updatedIngredients = [...prevFormData.ingredients]
+      updatedIngredients.splice(index, 1)
+      return { ...prevFormData, ingredients: updatedIngredients }
+    })
+  }
+
+  const handleSwitchChange = (fieldName) => {
+    return (e) => {
+      setFormData((prevData) => ({
+        ...prevData,
+        [fieldName]: e.target.checked
+      }))
+    }
+  }
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+    e.preventDefault()
+    console.log(formData)
+
+    dishServices.saveDish(formData)
+      .then(() => {
+        setFormData(initialFormData)
+        setSuccessMessage('Dish created successfully!')
+        setTimeout(() => {
+          setSuccessMessage('')
+        }, 3000)
+      })
+      .catch((error) => {
+        console.error('Error saving dish:', error)
+      })
+  }
 
   return (
     <div className='DishForm'>
       <h1>Create a new Dish!</h1>
       <br />
+      {successMessage && <p className='success-message'>{successMessage}</p>}
       <Form onSubmit={handleFormSubmit}>
         <Row className='mb-3'>
           <Form.Group as={Col} controlId='formGridName'>
@@ -88,7 +119,7 @@ function DishForm() {
           <Form.Label>Description</Form.Label>
           <Form.Control
             as='textarea'
-            rows={5}
+            rows={3}
             name='description'
             value={formData.description}
             onChange={handleInputChange}
@@ -120,6 +151,7 @@ function DishForm() {
                     name='newIngredient'
                     value={formData.newIngredient || ''}
                     onChange={handleIngredientInputChange}
+                    onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
                 />
                 </Col>
                 <Col xs={3}>
@@ -145,25 +177,25 @@ function DishForm() {
         </Row>
 
         <Form.Group className='mb-3' controlId='formVegetarian'>
-          <Form.Check
+        <Form.Check
             type='switch'
             id='vegetarian-switch'
             label='Vegetarian'
             name='vegetarian'
             checked={formData.vegetarian}
-            onChange={handleInputChange}
-          />
+            onChange={handleSwitchChange('vegetarian')}
+        />
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formVegan'>
-          <Form.Check
+        <Form.Check
             type='switch'
             id='vegan-switch'
             label='Vegan'
             name='vegan'
             checked={formData.vegan}
-            onChange={handleInputChange}
-          />
+            onChange={handleSwitchChange('vegan')}
+        />
         </Form.Group>
 
         <Button variant='primary' type='submit'>
@@ -171,7 +203,7 @@ function DishForm() {
         </Button>
       </Form>
     </div>
-  );
+  ) 
 }
 
-export default DishForm;
+export default DishForm

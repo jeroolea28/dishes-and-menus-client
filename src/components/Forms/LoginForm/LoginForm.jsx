@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../../context/auth.context"
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import UserServices from "../../../services/user.services"
+import userServices from "../../../services/user.services"
 import './LoginForm.css'
 
 
@@ -29,7 +29,7 @@ function LoginForm() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        UserServices
+        userServices
             .login(formData)
             .then((response) => {
                 storeToken(response.data.authToken)
