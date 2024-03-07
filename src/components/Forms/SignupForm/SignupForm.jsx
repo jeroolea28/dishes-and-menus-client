@@ -29,20 +29,19 @@ function SignupForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        userServices.signup(formData)
-          .then(() => {
+        userServices
+            .signup(formData)
+            .then(() => {
             navigate("/login")
-          })
-          .catch((error) => {
-            const errorDescription = error.response.data.message
-            setErrorMessage(errorDescription)
-        })
+            })
+            .catch((error) => {
+                const errorDescription = error.response.data.message
+                setErrorMessage(errorDescription)
+            })
     }
 
   return (
-    <div className='SignupForm'>
-        <br/>
-        <h1>Sign Up</h1>
+
         <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
@@ -66,12 +65,10 @@ function SignupForm(props) {
         <Button type="submit">
             Submit
         </Button>
-        </Form>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <p>Already have an account?</p>
-            <Link to={"/login"}> Log In</Link>
-    </div>
+        </Form>
+
   )
 }
 

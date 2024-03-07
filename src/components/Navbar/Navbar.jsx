@@ -38,7 +38,7 @@ const MainNavbar = () => {
             </NavDropdown>
 
             <NavDropdown title="My Creations" id="creations-dropdown">
-              <NavDropdown.Item href="#action/3.1">My Dishes</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to={'/allDishes'}>My Dishes</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">My Menus</NavDropdown.Item>
             </NavDropdown>
 

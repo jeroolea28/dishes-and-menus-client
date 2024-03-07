@@ -1,10 +1,20 @@
+import { Link } from "react-router-dom";
 import LoginForm from "../../components/Forms/LoginForm/LoginForm";
 
 const LoginPage = () => {
     return (
-        <section>
+        <div className='LoginForm'>
+
+            <br />
+
+            <h1>Log In</h1>
+
             <LoginForm/>
-        </section>
+            
+            <p>Don't have an account yet?</p>
+
+            <Link to={"/signup"}> Sign Up</Link>
+        </div>
     )
 }
 

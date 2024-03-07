@@ -6,9 +6,6 @@ import Button from 'react-bootstrap/Button'
 import userServices from "../../../services/user.services"
 import './LoginForm.css'
 
-
-const API_URL = "http://localhost:5005"
-
 function LoginForm() {
     const [formData, setFormData] = useState({
         email: "",
@@ -43,9 +40,7 @@ function LoginForm() {
     }
 
     return (
-        <div className='LoginForm'>
-            <br />
-            <h1>Log In</h1>
+
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
@@ -62,12 +57,9 @@ function LoginForm() {
                 <Button type="submit">
                     Submit
                 </Button>
-            </Form>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
+            </Form>
 
-            <p>Don't have an account yet?</p>
-            <Link to={"/signup"}> Sign Up</Link>
-        </div>
     )
 }
 
