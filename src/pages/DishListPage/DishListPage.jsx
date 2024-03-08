@@ -1,10 +1,12 @@
-import DishCard from "../../components/DishCard/DishCard";
+import { Container } from "react-bootstrap"
+import DishList from "../../components/DishList/DishList"
+
 
 const DishListPage = () => {
     return (
-        <section>
-            <DishCard/>
-        </section>
+        <Container>
+            <DishList/>
+        </Container>
     )
 }
 

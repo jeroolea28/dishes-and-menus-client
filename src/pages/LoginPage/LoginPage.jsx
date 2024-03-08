@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import LoginForm from "../../components/Forms/LoginForm/LoginForm";
+import { Container } from "react-bootstrap";
 
 const LoginPage = () => {
     return (
+        <Container>
         <div className='LoginForm'>
 
             <br />
@@ -15,6 +17,7 @@ const LoginPage = () => {
 
             <Link to={"/signup"}> Sign Up</Link>
         </div>
+        </Container>
     )
 }
 

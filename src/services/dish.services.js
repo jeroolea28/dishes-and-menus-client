@@ -22,6 +22,9 @@ class DishServices {
     saveDish(dishData) {
         return this.axiosApp.post("/api/dish/create", dishData)
     }
+    getAllDishes(){
+        return this.axiosApp.get('/api/dish/allDishes')
+    }
 }
 
 export default new DishServices()

@@ -7,11 +7,9 @@ import './DishForm.css'
 import dishServices from '../../../services/dish.services'
 import uploadServices from '../../../services/upload.services'
 import { DISH_SPICYNESS, INITIAL_DISH_DATA } from '../../../consts/dish.consts'
-
+import IngredientRow from './IngredientRow'
 
 function DishForm() {
-    
-
     const [formData, setFormData] = useState(INITIAL_DISH_DATA)
     const [successMessage, setSuccessMessage] = useState('')
 
@@ -61,27 +59,11 @@ function DishForm() {
             }))
         }
     }
-
-    const handleFileUpload = e => {
- 
-        const formData = new FormData()
-        formData.append('imageData', e.target.files[0])
-     
-        uploadServices
-            .uploadimage(formData)
-            .then(res => {
-                setCoasterData({ ...coasterData, imageUrl: res.data.cloudinary_url })
-            })
-            .catch(err => console.log(err))
-    }
-
-    const handleFormSubmit = (e) => {
-        e.preventDefault()
-
+    const saveDish = (formData) => {
         dishServices
             .saveDish(formData)
             .then(() => {
-                setFormData(initialFormData)
+                setFormData(INITIAL_DISH_DATA)
                 setSuccessMessage('Dish created successfully!')
                 setTimeout(() => {
                     setSuccessMessage('')
@@ -91,6 +73,38 @@ function DishForm() {
                 console.error('Error saving dish:', error)
             })
     }
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+    
+        const { name, description, price, spiciness, vegetarian, vegan } = formData;
+    
+        if (name && description && price && spiciness !== undefined && vegetarian !== undefined && vegan !== undefined) {
+            dishServices.saveDish(formData)
+                .then(() => saveDish(formData))
+                .catch((error) => {
+                    console.error('Error saving dish:', error);
+                });
+        } else {
+            console.error('Error: Missing required fields');
+        }
+    }
+
+    const handleFileUpload = e => {
+        e.preventDefault()
+        
+        const imageFormData = new FormData()
+        imageFormData.append('imageData', e.target.files[0])
+
+        uploadServices
+            .uploadImage(imageFormData)
+            .then(({data}) => {
+                setFormData({...formData, imageUrl: data.cloudinary_url})
+            })
+            .catch(err => console.log(err))
+
+    }
+    
 
     return (
 
@@ -135,35 +149,22 @@ function DishForm() {
                 <Form.Label>Ingredients</Form.Label>
                 <Row className='align-items-center'>
                     <Col xs={9}>
-                    <div className='ingredient-list'>
-                    {
-                        formData.ingredients.map((ingredient, index) => (
-                            // TODO: DESACOPLAR EN INGREDIENTROW
-                            <div key={index} className="mb-2">
-                                <span>{ingredient.charAt(0).toUpperCase() + ingredient.slice(1)}</span>
-                                <Button
-                                    variant="danger"
-                                    size="sm"
-                                    className="ms-2"
-                                    onClick={() => handleIngredientRemove(index)}
-                                >
-                                    Remove
-                                </Button>
-                            </div>
-                        ))
-                    }
-                    </div>
-                    <Form.Control
-                        type='text'
-                        placeholder='Add ingredient'
-                        name='newIngredient'
-                        value={formData.newIngredient || ''}
-                        onChange={handleIngredientInputChange}
-                        onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
-                    />
+                        <div className='ingredient-list'>
+                            {formData.ingredients.map((ingredient, index) => (
+                                <IngredientRow key={index} ingredient={ingredient} index={index} handleIngredientRemove={handleIngredientRemove} />
+                            ))}
+                        </div>
+                        <Form.Control
+                            type='text'
+                            placeholder='Add ingredient'
+                            name='newIngredient'
+                            value={formData.newIngredient || ''}
+                            onChange={handleIngredientInputChange}
+                            onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+                        />
                     </Col>
                     <Col xs={3}>
-                    <Button onClick={handleIngredientAdd}>Add</Button>
+                        <Button onClick={handleIngredientAdd}>Add</Button>
                     </Col>
                 </Row>
             </Form.Group>
@@ -174,15 +175,15 @@ function DishForm() {
             </Form.Group>
 
             <Row className='mb-3'>
-            <Form.Group as={Col} controlId='formGridAddress2'>
+            <Form.Group as={Col} controlId='formSpiciness'>
                 <Form.Label>Spiciness</Form.Label>
                 <Form.Select
                     name='spiciness'
                     value={formData.spiciness}
                     onChange={handleInputChange}>
-                    {
-                        DISH_SPICYNESS.map(elm => <option>{elm}</option>)
-                    }
+                        {
+                            DISH_SPICYNESS.map(elm => <option>{elm}</option>)
+                        }
                 </Form.Select>
             </Form.Group>
             </Row>
