@@ -12,6 +12,7 @@ import IngredientRow from './IngredientRow'
 function DishForm() {
     const [formData, setFormData] = useState(INITIAL_DISH_DATA)
     const [successMessage, setSuccessMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -91,24 +92,33 @@ function DishForm() {
     }
 
     const handleFileUpload = e => {
-        e.preventDefault()
-        
-        const imageFormData = new FormData()
-        imageFormData.append('imageData', e.target.files[0])
 
+        const imageFormData = new FormData();
+        imageFormData.append("imageData", e.target.files[0]);
+    
+        setIsLoading(true)
+    
         uploadServices
             .uploadImage(imageFormData)
-            .then(({data}) => {
-                setFormData({...formData, imageUrl: data.cloudinary_url})
+            .then((res) => {
+                setFormData((prevFormData) => {
+                    return { ...prevFormData, imageData: res.data.cloudinary_url };
+                });
             })
-            .catch(err => console.log(err))
-
-    }
+            .catch((err) => console.log(err))
+            .finally(() => setIsLoading(false))
+    };
     
 
     return (
-
-        <Form onSubmit={handleFormSubmit}>
+        <Form onSubmit={handleFormSubmit} disabled={isLoading}>
+            {isLoading && (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            )}
             {successMessage && <p className='success-message'>{successMessage}</p>}
             <Row className='mb-3'>
             <Form.Group as={Col} controlId='formGridName'>
@@ -170,7 +180,7 @@ function DishForm() {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="image">
-                <Form.Label>Imagen (URL)</Form.Label>
+                <Form.Label>Image(URL)</Form.Label>
                 <Form.Control type="file" onChange={handleFileUpload} />
             </Form.Group>
 

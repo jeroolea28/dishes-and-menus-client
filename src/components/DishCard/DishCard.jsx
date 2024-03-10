@@ -1,10 +1,10 @@
 import React from 'react'
 import { Card, Button } from 'react-bootstrap'
 
-function DishCard({ name, description, image, price }) {
+function DishCard({ name, description, imageData, price }) {
   return (
     <Card>
-      {image && <Card.Img variant='top' src={image} />}
+      <Card.Img variant='top' src={imageData} />
       <Card.Body>
         <Card.Title>{name}</Card.Title>
         <Card.Text>
