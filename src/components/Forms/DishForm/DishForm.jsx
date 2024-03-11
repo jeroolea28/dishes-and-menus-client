@@ -7,16 +7,15 @@ import Toast from 'react-bootstrap/Toast'
 import './DishForm.css'
 import dishServices from '../../../services/dish.services'
 import uploadServices from '../../../services/upload.services'
-import { DISH_SPICYNESS, INITIAL_DISH_DATA } from '../../../consts/dish.consts'
+import { DISH_SPICYNESS, INITIAL_DISH_DATA, DISH_TYPES } from '../../../consts/dish.consts'
 import IngredientRow from './IngredientRow'
 import { AuthContext } from '../../../context/auth.context'
 
 function DishForm() {
     const [formData, setFormData] = useState(INITIAL_DISH_DATA)
-    const [successMessage, setSuccessMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [showToast, setShowToast] = useState(false)
-    const {user} = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -67,15 +66,15 @@ function DishForm() {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
-    
-        const { name, description, price, spiciness, vegetarian, vegan, imageData } = formData;
-    
-        if (name && description && price && spiciness !== undefined && vegetarian !== undefined && vegan !== undefined && imageData !== undefined) {
+
+        const { name, description, price, spiciness, vegetarian, vegan, imageData, type } = formData;
+
+        if (name && description && price && spiciness !== undefined && vegetarian !== undefined && vegan !== undefined && imageData !== undefined && type !== undefined) {
             const formDataWithUser = {
                 ...formData,
                 owner: user._id
             };
-    
+
             dishServices.saveDish(formDataWithUser)
                 .then(() => {
                     setFormData(INITIAL_DISH_DATA);
@@ -88,15 +87,15 @@ function DishForm() {
             console.error('Error: Missing required fields');
         }
     }
-    
+
 
     const handleFileUpload = e => {
 
         const imageFormData = new FormData()
         imageFormData.append("imageData", e.target.files[0])
-    
+
         setIsLoading(true)
-    
+
         uploadServices
             .uploadImage(imageFormData)
             .then((res) => {
@@ -107,7 +106,7 @@ function DishForm() {
             .catch((err) => console.log(err))
             .finally(() => setIsLoading(false))
     }
-    
+
 
     return (
         <Form onSubmit={handleFormSubmit} disabled={isLoading}>
@@ -119,38 +118,38 @@ function DishForm() {
                 </div>
             )}
             <Row className='mb-3'>
-            <Form.Group as={Col} controlId='formGridName'>
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                type='dish'
-                placeholder='Enter Dish name'
-                name='name'
-                value={formData.name}
-                onChange={handleInputChange}
-                />
-            </Form.Group>
+                <Form.Group as={Col} controlId='formGridName'>
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                        type='dish'
+                        placeholder='Enter Dish name'
+                        name='name'
+                        value={formData.name}
+                        onChange={handleInputChange}
+                    />
+                </Form.Group>
 
-            <Form.Group as={Col} controlId='formGridPrice'>
-                <Form.Label>Price</Form.Label>
-                <Form.Control
-                type='price'
-                placeholder='Enter Price'
-                name='price'
-                value={formData.price}
-                onChange={handleInputChange}
-                />
-            </Form.Group>
+                <Form.Group as={Col} controlId='formGridPrice'>
+                    <Form.Label>Price</Form.Label>
+                    <Form.Control
+                        type='price'
+                        placeholder='Enter Price'
+                        name='price'
+                        value={formData.price}
+                        onChange={handleInputChange}
+                    />
+                </Form.Group>
             </Row>
 
             <Form.Group className='mb-3' controlId='formDescription'>
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-                as='textarea'
-                rows={3}
-                name='description'
-                value={formData.description}
-                onChange={handleInputChange}
-            />
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                    as='textarea'
+                    rows={3}
+                    name='description'
+                    value={formData.description}
+                    onChange={handleInputChange}
+                />
             </Form.Group>
 
             <Form.Group className='mb-3' controlId='formIngredients'>
@@ -183,43 +182,55 @@ function DishForm() {
             </Form.Group>
 
             <Row className='mb-3'>
-            <Form.Group as={Col} controlId='formSpiciness'>
-                <Form.Label>Spiciness</Form.Label>
-                <Form.Select
-                    name='spiciness'
-                    value={formData.spiciness}
-                    onChange={handleInputChange}>
+                <Form.Group as={Col} controlId='formSpiciness'>
+                    <Form.Label>Spiciness</Form.Label>
+                    <Form.Select
+                        name='spiciness'
+                        value={formData.spiciness}
+                        onChange={handleInputChange}>
                         {
                             DISH_SPICYNESS.map(elm => <option>{elm}</option>)
                         }
-                </Form.Select>
-            </Form.Group>
+                    </Form.Select>
+                </Form.Group>
+
+                <Form.Group as={Col} controlId='formDishType'>
+                    <Form.Label>Dish Type</Form.Label>
+                    <Form.Select
+                        name='type'
+                        value={formData.type}
+                        onChange={handleInputChange}>
+                        {
+                            DISH_TYPES.map(type => <option>{type}</option>)
+                        }
+                    </Form.Select>
+                </Form.Group>
             </Row>
 
             <Form.Group className='mb-3' controlId='formVegetarian'>
-            <Form.Check
-                type='switch'
-                id='vegetarian-switch'
-                label='Vegetarian'
-                name='vegetarian'
-                checked={formData.vegetarian}
-                onChange={handleSwitchChange('vegetarian')}
-            />
+                <Form.Check
+                    type='switch'
+                    id='vegetarian-switch'
+                    label='Vegetarian'
+                    name='vegetarian'
+                    checked={formData.vegetarian}
+                    onChange={handleSwitchChange('vegetarian')}
+                />
             </Form.Group>
 
             <Form.Group className='mb-3' controlId='formVegan'>
-            <Form.Check
-                type='switch'
-                id='vegan-switch'
-                label='Vegan'
-                name='vegan'
-                checked={formData.vegan}
-                onChange={handleSwitchChange('vegan')}
-            />
+                <Form.Check
+                    type='switch'
+                    id='vegan-switch'
+                    label='Vegan'
+                    name='vegan'
+                    checked={formData.vegan}
+                    onChange={handleSwitchChange('vegan')}
+                />
             </Form.Group>
 
             <Button variant='primary' type='submit'>
-            Submit
+                Submit
             </Button>
 
             <Toast
@@ -235,7 +246,7 @@ function DishForm() {
             </Toast>
 
         </Form>
-    ) 
+    )
 }
 
 export default DishForm
