@@ -4,7 +4,7 @@ import { Card, Button } from 'react-bootstrap'
 function DishCard({ name, description, imageData, price }) {
   return (
     <Card>
-      <Card.Img variant='top' src={imageData} />
+      <Card.Img src={imageData} />
       <Card.Body>
         <Card.Title>{name}</Card.Title>
         <Card.Text>

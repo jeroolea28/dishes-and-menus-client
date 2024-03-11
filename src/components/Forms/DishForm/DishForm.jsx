@@ -76,25 +76,32 @@ function DishForm() {
     }
 
     const handleFormSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
     
-        const { name, description, price, spiciness, vegetarian, vegan } = formData;
+        const { name, description, price, spiciness, vegetarian, vegan } = formData
     
         if (name && description && price && spiciness !== undefined && vegetarian !== undefined && vegan !== undefined) {
             dishServices.saveDish(formData)
-                .then(() => saveDish(formData))
+                .then(() => {
+                    setFormData(INITIAL_DISH_DATA)
+                    setSuccessMessage('Dish created successfully!')
+                    setTimeout(() => {
+                        setSuccessMessage('')
+                    }, 3000)
+                })
                 .catch((error) => {
-                    console.error('Error saving dish:', error);
-                });
+                    console.error('Error saving dish:', error)
+                })
         } else {
-            console.error('Error: Missing required fields');
+            console.error('Error: Missing required fields')
         }
     }
+    
 
     const handleFileUpload = e => {
 
-        const imageFormData = new FormData();
-        imageFormData.append("imageData", e.target.files[0]);
+        const imageFormData = new FormData()
+        imageFormData.append("imageData", e.target.files[0])
     
         setIsLoading(true)
     
@@ -102,12 +109,12 @@ function DishForm() {
             .uploadImage(imageFormData)
             .then((res) => {
                 setFormData((prevFormData) => {
-                    return { ...prevFormData, imageData: res.data.cloudinary_url };
-                });
+                    return { ...prevFormData, imageData: res.data.cloudinary_url }
+                })
             })
             .catch((err) => console.log(err))
             .finally(() => setIsLoading(false))
-    };
+    }
     
 
     return (

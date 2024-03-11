@@ -34,7 +34,7 @@ function DishList() {
                 key={dish._id}
                 name={dish.name}
                 description={dish.description}
-                image={dish.image}
+                imageData={dish.imageData}
                 price={dish.price}
               />
             </Col>
