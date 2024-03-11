@@ -1,8 +1,9 @@
 import React from 'react'
 import { Card, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import './DishCard.css'
 
-function DishCard({ name, description, imageData, price }) {
+function DishCard({ name, description, imageData, price, id }) {
   return (
     <Card>
       <div className="card-img-container">
@@ -15,7 +16,7 @@ function DishCard({ name, description, imageData, price }) {
           <br />
           <strong>Price:</strong> ${price}
         </Card.Text>
-        <Button variant='primary'>Details</Button>
+        <Link to={`/dish/${id}`} className="btn btn-primary">Details</Link>
       </Card.Body>
     </Card>
   )

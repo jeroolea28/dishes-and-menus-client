@@ -35,6 +35,7 @@ function DishList() {
           {dishes.map(dish => (
             <Col md={{span: 4}} key={dish._id}>
               <DishCard
+                id={dish._id}
                 name={dish.name}
                 description={dish.description}
                 imageData={dish.imageData}

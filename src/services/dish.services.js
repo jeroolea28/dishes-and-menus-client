@@ -25,6 +25,9 @@ class DishServices {
     getAllDishes(userId){
         return this.axiosApp.get(`/api/dish/allDishes/${userId}`)
     }
+    getSingleDish(dishId){
+        return this.axiosApp.get(`/api/dish/${dishId}`)
+    }
 }
 
 export default new DishServices()
