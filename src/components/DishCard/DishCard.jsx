@@ -1,13 +1,16 @@
 import React from 'react'
 import { Card, Button } from 'react-bootstrap'
+import './DishCard.css'
 
 function DishCard({ name, description, imageData, price }) {
   return (
     <Card>
-      <Card.Img src={imageData} />
+      <div className="card-img-container">
+        <Card.Img src={imageData} className="card-img" />
+      </div>
       <Card.Body>
         <Card.Title>{name}</Card.Title>
-        <Card.Text>
+        <Card.Text className="card-description">
           <strong>Description:</strong> {description}
           <br />
           <strong>Price:</strong> ${price}

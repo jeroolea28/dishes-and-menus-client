@@ -1,18 +1,22 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Toast from 'react-bootstrap/Toast'
 import './DishForm.css'
 import dishServices from '../../../services/dish.services'
 import uploadServices from '../../../services/upload.services'
 import { DISH_SPICYNESS, INITIAL_DISH_DATA } from '../../../consts/dish.consts'
 import IngredientRow from './IngredientRow'
+import { AuthContext } from '../../../context/auth.context'
 
 function DishForm() {
     const [formData, setFormData] = useState(INITIAL_DISH_DATA)
     const [successMessage, setSuccessMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [showToast, setShowToast] = useState(false)
+    const {user} = useContext(AuthContext)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -60,40 +64,28 @@ function DishForm() {
             }))
         }
     }
-    const saveDish = (formData) => {
-        dishServices
-            .saveDish(formData)
-            .then(() => {
-                setFormData(INITIAL_DISH_DATA)
-                setSuccessMessage('Dish created successfully!')
-                setTimeout(() => {
-                    setSuccessMessage('')
-                }, 3000)
-            })
-            .catch((error) => {
-                console.error('Error saving dish:', error)
-            })
-    }
 
     const handleFormSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
     
-        const { name, description, price, spiciness, vegetarian, vegan } = formData
+        const { name, description, price, spiciness, vegetarian, vegan, imageData } = formData;
     
-        if (name && description && price && spiciness !== undefined && vegetarian !== undefined && vegan !== undefined) {
-            dishServices.saveDish(formData)
+        if (name && description && price && spiciness !== undefined && vegetarian !== undefined && vegan !== undefined && imageData !== undefined) {
+            const formDataWithUser = {
+                ...formData,
+                owner: user._id
+            };
+    
+            dishServices.saveDish(formDataWithUser)
                 .then(() => {
-                    setFormData(INITIAL_DISH_DATA)
-                    setSuccessMessage('Dish created successfully!')
-                    setTimeout(() => {
-                        setSuccessMessage('')
-                    }, 3000)
+                    setFormData(INITIAL_DISH_DATA);
+                    setShowToast(true);
                 })
                 .catch((error) => {
-                    console.error('Error saving dish:', error)
-                })
+                    console.error('Error saving dish:', error);
+                });
         } else {
-            console.error('Error: Missing required fields')
+            console.error('Error: Missing required fields');
         }
     }
     
@@ -126,7 +118,6 @@ function DishForm() {
                     </div>
                 </div>
             )}
-            {successMessage && <p className='success-message'>{successMessage}</p>}
             <Row className='mb-3'>
             <Form.Group as={Col} controlId='formGridName'>
                 <Form.Label>Name</Form.Label>
@@ -230,6 +221,19 @@ function DishForm() {
             <Button variant='primary' type='submit'>
             Submit
             </Button>
+
+            <Toast
+                show={showToast}
+                onClose={() => setShowToast(false)}
+                className="position-fixed top-80 end-0 m-3" // Adjusted position
+                style={{ maxWidth: '350px' }}
+            >
+                <Toast.Header closeButton={false}>
+                    <strong className="me-auto">Success</strong>
+                </Toast.Header>
+                <Toast.Body>Dish created successfully!</Toast.Body>
+            </Toast>
+
         </Form>
     ) 
 }

@@ -7,6 +7,7 @@ export const INITIAL_DISH_DATA = {
     spiciness: 'Not Spicy',
     vegetarian: false,
     vegan: false,
+    owner: null
 }
 
-export const DISH_SPICYNESS = ['Not Spicy', 'Spicy', 'Mild', 'Very Spicy']
+export const DISH_SPICYNESS = ['Not Spicy', 'Mild', 'Spicy', 'Very Spicy']
