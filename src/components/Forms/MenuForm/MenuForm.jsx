@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Dropdown } from 'react-bootstrap';
 import dishServices from '../../../services/dish.services';
+import menuServices from '../../../services/menu.services';
 import { useContext } from 'react';
 import { AuthContext } from '../../../context/auth.context';
 
 function MenuForm() {
     const [dishes, setDishes] = useState([]);
-    const [selectedDishes, setSelectedDishes] = useState({ appetizers: [], mains: [], desserts: [], drinks: [] });
+    const [selectedDishes, setSelectedDishes] = useState({ appetizers: [], mainDishes: [], desserts: [], drinks: [] });
+    const [menuName, setMenuName] = useState('');
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
@@ -54,13 +56,32 @@ function MenuForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Selected dishes:', selectedDishes);
-    };
-
+        const menuData = {
+            name: menuName,
+            ...selectedDishes
+        };
+        menuServices.createMenu(menuData)
+            .then(createdMenu => {
+                console.log('Menu created:', createdMenu);
+            })
+            .catch(error => {
+                console.error('Error creating menu:', error);
+            });
+    }
     return (
         <Form onSubmit={handleSubmit}>
             <Form.Group>
-                <Form.Label>Select Appetizers:</Form.Label>
+                <Form.Label>Menu Name:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={menuName}
+                    onChange={(e) => setMenuName(e.target.value)}
+                    placeholder="Enter menu name"
+                    required
+                />
+            </Form.Group>
+            <br />
+            <Form.Group>
                 <Dropdown onSelect={(selectedId) => handleDropdownChange(selectedId, 'appetizers')}>
                     <Dropdown.Toggle variant="success" id="dropdown-appetizers">
                         Select Appetizers
@@ -80,12 +101,11 @@ function MenuForm() {
                 </Dropdown>
                 <p>Appetizers selected: {renderSelectedDishes('appetizers')}</p>
             </Form.Group>
-            
+
             <Form.Group>
-                <Form.Label>Select Mains:</Form.Label>
-                <Dropdown onSelect={(selectedId) => handleDropdownChange(selectedId, 'mains')}>
-                    <Dropdown.Toggle variant="success" id="dropdown-mains">
-                        Select Mains
+                <Dropdown onSelect={(selectedId) => handleDropdownChange(selectedId, 'mainDishes')}>
+                    <Dropdown.Toggle variant="success" id="dropdown-mainDishes">
+                        Select Main Dishes
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {dishes.map(dish => (
@@ -93,18 +113,17 @@ function MenuForm() {
                             <Dropdown.Item
                                 key={dish._id}
                                 eventKey={dish._id}
-                                style={{ backgroundColor: isDishSelected(dish._id, 'mains') ? 'lightblue' : 'white' }}
+                                style={{ backgroundColor: isDishSelected(dish._id, 'mainDishes') ? 'lightblue' : 'white' }}
                             >
                                 {dish.name}
                             </Dropdown.Item>
                         ))}
                     </Dropdown.Menu>
                 </Dropdown>
-                <p>Mains selected: {renderSelectedDishes('mains')}</p>
+                <p>Main Dishes selected: {renderSelectedDishes('mainDishes')}</p>
             </Form.Group>
 
             <Form.Group>
-                <Form.Label>Select Desserts:</Form.Label>
                 <Dropdown onSelect={(selectedId) => handleDropdownChange(selectedId, 'desserts')}>
                     <Dropdown.Toggle variant="success" id="dropdown-desserts">
                         Select Desserts
@@ -126,7 +145,6 @@ function MenuForm() {
             </Form.Group>
 
             <Form.Group>
-                <Form.Label>Select Drinks:</Form.Label>
                 <Dropdown onSelect={(selectedId) => handleDropdownChange(selectedId, 'drinks')}>
                     <Dropdown.Toggle variant="success" id="dropdown-drinks">
                         Select Drinks
@@ -151,7 +169,7 @@ function MenuForm() {
                 Submit
             </Button>
         </Form>
-    );
+    )
 }
 
-export default MenuForm;
+export default MenuForm
