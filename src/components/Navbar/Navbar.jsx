@@ -29,7 +29,7 @@ const MainNavbar = () => {
               <button onClick={logout} className="nav-link">Logout</button>
               <NavDropdown title="Create" id="create-dropdown">
                 <NavDropdown.Item as={Link} to={'/dish/create'}>Dish</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Menu</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to={'/menu/create'}>Menu</NavDropdown.Item>
               </NavDropdown>
               <NavDropdown title="My Creations" id="creations-dropdown">
                 <NavDropdown.Item as={Link} to={'/allDishes'}>My Dishes</NavDropdown.Item>
