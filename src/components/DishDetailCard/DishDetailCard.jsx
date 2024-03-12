@@ -3,7 +3,7 @@ import { Button, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom'; 
 import dishServices from '../../services/dish.services';
 import { Link } from 'react-router-dom';
-import './DishDetailCard.css'; // Import CSS file
+import './DishDetailCard.css'
 
 function DishDetailCard() {
     const [dish, setDish] = useState(null);
@@ -19,7 +19,7 @@ function DishDetailCard() {
             });
     }, [id]);
 
-    const { name, description, price, imageData } = dish || {};
+    const { name, description, price, imageData, ingredients } = dish || {};
 
     return (
         <Card className="d-flex flex-row dish-detail-card">
@@ -31,6 +31,12 @@ function DishDetailCard() {
                 <Card.Text>
                     <strong>Description:</strong> {description}
                     <br />
+                    <strong>Ingredients:</strong>
+                    <ul>
+                        {ingredients && ingredients.map((ingredient, index) => (
+                            <li key={index}>{ingredient}</li>
+                        ))}
+                    </ul>
                     <strong>Price:</strong> ${price}
                 </Card.Text>
             </Card.Body>

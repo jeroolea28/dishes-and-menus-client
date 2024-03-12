@@ -41,7 +41,9 @@ function DishList() {
                 imageData={dish.imageData}
                 price={dish.price}
               />
+              <br />
             </Col>
+            
           ))}
           </Row>
         </div>
