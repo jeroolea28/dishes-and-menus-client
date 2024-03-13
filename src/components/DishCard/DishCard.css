@@ -3,15 +3,20 @@
     overflow: hidden; 
   }
   
-  .card-img {
-    object-fit: cover; 
-    height: 100%;
-    width: 100%; 
-  }
+.card-img {
+  object-fit: cover; 
+  height: 100%;
+  width: 100%; 
+}
   
-  .card-description {
-    height: 80px; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-  }
+.card-description {
+  height: 80px; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}

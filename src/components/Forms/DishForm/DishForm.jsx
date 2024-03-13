@@ -1,28 +1,40 @@
-import { useContext, useState } from 'react'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Toast from 'react-bootstrap/Toast'
-import './DishForm.css'
-import dishServices from '../../../services/dish.services'
-import uploadServices from '../../../services/upload.services'
-import { DISH_SPICYNESS, INITIAL_DISH_DATA, DISH_TYPES } from '../../../consts/dish.consts'
-import IngredientRow from './IngredientRow'
-import { AuthContext } from '../../../context/auth.context'
+import React, { useContext, useState, useEffect } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Toast from 'react-bootstrap/Toast';
+import './DishForm.css';
+import dishServices from '../../../services/dish.services';
+import uploadServices from '../../../services/upload.services';
+import { DISH_SPICYNESS, DISH_TYPES, INITIAL_DISH_DATA } from '../../../consts/dish.consts';
+import IngredientRow from './IngredientRow';
+import { AuthContext } from '../../../context/auth.context';
 
-function DishForm() {
-    const [formData, setFormData] = useState(INITIAL_DISH_DATA)
-    const [isLoading, setIsLoading] = useState(false)
-    const [showToast, setShowToast] = useState(false)
-    const { user } = useContext(AuthContext)
+function DishForm({ dishId, closeModal, updateDishDetails }) {
+    const [formData, setFormData] = useState(INITIAL_DISH_DATA);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (dishId) {
+            dishServices.getSingleDish(dishId)
+                .then(response => {
+                    setFormData(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching dish details:', error);
+                });
+        }
+    }, [dishId]);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target
-        setFormData((prevData) => ({
+        const { name, value } = e.target;
+        setFormData(prevData => ({
             ...prevData,
-            [name]: value,
-        }))
+            [name]: value
+        }));
     }
 
     const handleIngredientAdd = () => {
@@ -31,38 +43,38 @@ function DishForm() {
                 ...prevData,
                 ingredients: [...prevData.ingredients, prevData.newIngredient.trim()],
                 newIngredient: '',
-            }))
+            }));
         }
-    }
+    };
 
     const handleIngredientInputChange = (e) => {
-        const { name, value, key } = e.target
+        const { name, value, key } = e.target;
         if (key === 'Enter') {
-            handleIngredientAdd()
+            handleIngredientAdd();
         } else {
             setFormData((prevData) => ({
                 ...prevData,
                 [name]: value,
-            }))
+            }));
         }
-    }
+    };
 
     const handleIngredientRemove = (index) => {
         setFormData((prevFormData) => {
-            const updatedIngredients = [...prevFormData.ingredients]
-            updatedIngredients.splice(index, 1)
-            return { ...prevFormData, ingredients: updatedIngredients }
-        })
-    }
+            const updatedIngredients = [...prevFormData.ingredients];
+            updatedIngredients.splice(index, 1);
+            return { ...prevFormData, ingredients: updatedIngredients };
+        });
+    };
 
     const handleSwitchChange = (fieldName) => {
         return (e) => {
             setFormData((prevData) => ({
                 ...prevData,
-                [fieldName]: e.target.checked
-            }))
-        }
-    }
+                [fieldName]: e.target.checked,
+            }));
+        };
+    };
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -72,39 +84,53 @@ function DishForm() {
         if (name && description && price && spiciness !== undefined && vegetarian !== undefined && vegan !== undefined && imageData !== undefined && type !== undefined) {
             const formDataWithUser = {
                 ...formData,
-                owner: user._id
+                owner: user._id,
             };
 
-            dishServices.saveDish(formDataWithUser)
-                .then(() => {
-                    setFormData(INITIAL_DISH_DATA);
-                    setShowToast(true);
-                })
-                .catch((error) => {
-                    console.error('Error saving dish:', error);
-                });
+            if (dishId) {
+                dishServices
+                    .editDish(dishId, formDataWithUser)
+                    .then(() => {
+                        console.log('Dish updated successfully');
+                        setShowToast(true)
+                        closeModal();
+                        updateDishDetails(formDataWithUser);
+                    })
+                    .catch((error) => {
+                        console.error('Error updating dish:', error);
+                    });
+            } else {
+                dishServices
+                    .saveDish(formDataWithUser)
+                    .then(() => {
+                        console.log('Dish created successfully');
+                        setShowToast(true);
+                    })
+                    .catch((error) => {
+                        console.error('Error saving dish:', error);
+                    });
+            }
         } else {
             console.error('Error: Missing required fields');
         }
-    }
+    };
 
+    const handleFileUpload = (e) => {
+        const imageFormData = new FormData();
+        imageFormData.append('imageData', e.target.files[0]);
 
-    const handleFileUpload = e => {
-
-        const imageFormData = new FormData()
-        imageFormData.append("imageData", e.target.files[0])
-
-        setIsLoading(true)
+        setIsLoading(true);
 
         uploadServices
             .uploadImage(imageFormData)
             .then((res) => {
-                setFormData((prevFormData) => {
-                    return { ...prevFormData, imageData: res.data.cloudinary_url }
-                })
+                setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    imageData: res.data.cloudinary_url,
+                }));
             })
             .catch((err) => console.log(err))
-            .finally(() => setIsLoading(false))
+            .finally(() => setIsLoading(false));
     }
 
 
