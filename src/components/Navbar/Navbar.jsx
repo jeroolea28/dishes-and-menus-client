@@ -33,7 +33,7 @@ const MainNavbar = () => {
               </NavDropdown>
               <NavDropdown title="My Creations" id="creations-dropdown">
                 <NavDropdown.Item as={Link} to={'/allDishes'}>My Dishes</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">My Menus</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to={'/allMenus'}>My Menus</NavDropdown.Item>
               </NavDropdown>
               <div className="nav-link">Good to see you {user.username}!</div>
               </>

@@ -6,6 +6,7 @@ import DishCreationPage from '../pages/DishCreationPage/DishCreationPage'
 import DishListPage from '../pages/DishListPage/DishListPage'
 import DishDetailPage from '../pages/DishDetailsPage/DishDetailsPage'
 import MenuCreationPage from '../pages/MenuCreationPage/MenuCreationPage'
+import MenuListPage from '../pages/MenuListPage/MenuListPage'
 import PrivateRoutes from './PrivateRoutes'
 
 
@@ -22,6 +23,7 @@ const AppRoutes = () => {
                 <Route path='/allDishes' element={<DishListPage/>}/>
                 <Route path='/dish/:id' element={<DishDetailPage />} />
                 <Route path='/menu/create' element={<MenuCreationPage/>}/>
+                <Route path='/allMenus' element={<MenuListPage/>}/>
             </Route>
         </Routes>
     )
