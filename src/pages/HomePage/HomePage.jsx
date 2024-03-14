@@ -1,16 +1,15 @@
-import { Container } from 'react-bootstrap'
-import './HomePage.css'
+import { Container } from 'react-bootstrap';
+import './HomePage.css';
+import kitchenVideo from './../../assets/Dishes-and-Menus.mp4';
 
 const HomePage = () => {
     return (
-        <Container>
-        <div className="homePage">
-        <h1>
-            HOLA ESTA ES LA PAGINA PRINCIPAL
-        </h1>
-        </div>
+        <Container fluid className="homePage">
+            <video autoPlay loop muted className="background-video">
+                <source src={kitchenVideo} type="video/mp4" />
+            </video>
         </Container>
-    )
+    );
 }
 
-export default HomePage
+export default HomePage;
