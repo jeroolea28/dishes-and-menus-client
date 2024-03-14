@@ -37,7 +37,7 @@ function MenuList() {
 
     return (
         <div className='MenuList'>
-            <h2>Menus</h2>
+            <h2 style={{color:'white', textShadow: '1px 1px 1px black'}}>Menus</h2>
             {loading ? (
                 <p>Loading...</p>
             ) : (
