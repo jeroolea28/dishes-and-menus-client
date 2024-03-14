@@ -7,6 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Container } from "react-bootstrap";
+import LogoImage from './../../assets/Dishes-logo-sized.png'
 
 const MainNavbar = () => {
   const { user, isLoggedIn, logout } = useContext(AuthContext)
@@ -14,7 +15,9 @@ const MainNavbar = () => {
   return (
     <Navbar bg="dark" data-bs-theme="dark" fixed="top" expand="lg" className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand as={Link} to='/'>Dishes and Menus</Navbar.Brand>
+      <Navbar.Brand as={Link} to='/'>
+        <img src={LogoImage} alt="Menu"style={{ height: '45px', width: 'auto' }}/>
+      </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="NavbarSpacing justify-content-between">
           <Nav className="me-auto">
