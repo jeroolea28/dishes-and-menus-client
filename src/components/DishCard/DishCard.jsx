@@ -10,7 +10,7 @@ function DishCard({ name, description, imageData, price, id, onDelete }) {
 
   return (
     <Card>
-      <div className="card-img-container">
+      <div className="card-img-container shadow-sm">
         <Card.Img src={imageData} className="card-img" />
       </div>
       <Card.Body>
@@ -20,6 +20,7 @@ function DishCard({ name, description, imageData, price, id, onDelete }) {
           <br />
           <strong>Price:</strong> ${price}
         </Card.Text>
+        <hr />
         <div className='buttons'>
           <Link to={`/dish/${id}`} className="btn btn-primary">Details</Link>
           <Button variant="danger" className="delete-btn" onClick={handleDelete}>Delete</Button>

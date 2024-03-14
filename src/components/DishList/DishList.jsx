@@ -38,7 +38,8 @@ function DishList() {
 
   return (
     <div className='DishList'>
-      <h2>Dishes</h2>
+      <br />
+      <h2 style={{color:'white', textShadow: '1px 1px 1px black'}}>Dishes</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (
