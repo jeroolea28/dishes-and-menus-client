@@ -9,7 +9,7 @@ const LoginPage = () => {
         <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '90vh', display: 'flex', alignItems: 'center' }}>
             <Container>
                 <Row>
-                    <Col md={{ span: 6 }}>
+                    <Col md={{ span: 6}}>
                         <img src={invertedLogo} alt="inverted-logo" style={{ width: '50%', height: 'auto' }} />
                     </Col>
                     <Col md={{ span: 6 }}>
