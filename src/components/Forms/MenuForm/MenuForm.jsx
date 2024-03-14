@@ -1,73 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Button, Dropdown, Row, Col } from 'react-bootstrap';
-import dishServices from '../../../services/dish.services';
-import menuServices from '../../../services/menu.services';
-import { useContext } from 'react';
-import { AuthContext } from '../../../context/auth.context';
+import React, { useState, useEffect } from 'react'
+import { Form, Button, Dropdown, Row, Col, Toast } from 'react-bootstrap'
+import dishServices from '../../../services/dish.services'
+import menuServices from '../../../services/menu.services'
+import { useContext } from 'react'
+import { AuthContext } from '../../../context/auth.context'
 
 function MenuForm() {
-    const [dishes, setDishes] = useState([]);
-    const [selectedDishes, setSelectedDishes] = useState({ appetizers: [], mainDishes: [], desserts: [], drinks: [] });
-    const [menuName, setMenuName] = useState('');
-    const { user } = useContext(AuthContext);
+    const [dishes, setDishes] = useState([])
+    const [selectedDishes, setSelectedDishes] = useState({ appetizers: [], mainDishes: [], desserts: [], drinks: [] })
+    const [menuName, setMenuName] = useState('')
+    const { user } = useContext(AuthContext)
+    const [showToast, setShowToast] = useState(false)
 
     useEffect(() => {
         if (user) {
             dishServices
                 .getAllDishes(user._id)
                 .then(response => {
-                    setDishes(response.data);
+                    setDishes(response.data)
                 })
                 .catch(error => {
-                    console.error('Error fetching dishes:', error);
-                });
+                    console.error('Error fetching dishes:', error)
+                })
         }
-    }, [user]);
+    }, [user])
 
     const handleDropdownChange = (selectedId, category) => {
         setSelectedDishes(prevSelected => {
-            const isSelected = prevSelected[category].includes(selectedId);
+            const isSelected = prevSelected[category].includes(selectedId)
             if (isSelected) {
                 return {
                     ...prevSelected,
                     [category]: prevSelected[category].filter(id => id !== selectedId)
-                };
+                }
             } else {
                 return {
                     ...prevSelected,
                     [category]: [...prevSelected[category], selectedId]
-                };
+                }
             }
-        });
-    };
+        })
+    }
 
     const renderSelectedDishes = (category) => {
-        const selectedIds = selectedDishes[category];
+        const selectedIds = selectedDishes[category]
         const selectedNames = selectedIds.map(id => {
-            const selectedDish = dishes.find(dish => dish._id === id);
-            return selectedDish ? selectedDish.name : '';
-        });
-        return selectedNames.join(', ');
-    };
+            const selectedDish = dishes.find(dish => dish._id === id)
+            return selectedDish ? selectedDish.name : ''
+        })
+        return selectedNames.join(', ')
+    }
 
     const isDishSelected = (dishId, category) => {
-        return selectedDishes[category].includes(dishId);
-    };
+        return selectedDishes[category].includes(dishId)
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         const menuData = {
             name: menuName,
             ...selectedDishes
-        };
+        }
         menuServices.createMenu(menuData)
             .then(createdMenu => {
-                console.log('Menu created:', createdMenu);
+                console.log('Menu created:', createdMenu)
+                setShowToast(true)
             })
             .catch(error => {
-                console.error('Error creating menu:', error);
-            });
-    };
+                console.error('Error creating menu:', error)
+            })
+    }
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -177,8 +179,22 @@ function MenuForm() {
             <Button variant="primary" type="submit">
                 Submit
             </Button>
+
+            <Toast
+                show={showToast}
+                onClose={() => setShowToast(false)}
+                className="position-fixed top-0 end-0 mt-2 me-2"
+                style={{ maxWidth: '350px' }}
+                autohide
+                delay={4000}
+            >
+                <Toast.Header closeButton={false}>
+                    <strong className="me-auto">Success</strong>
+                </Toast.Header>
+                <Toast.Body>Menu created successfully!</Toast.Body>
+            </Toast>
         </Form>
-    );
+    )
 }
 
-export default MenuForm;
+export default MenuForm

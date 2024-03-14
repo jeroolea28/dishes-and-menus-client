@@ -29,6 +29,10 @@ function DishForm({ dishId, closeModal, updateDishDetails }) {
         }
     }, [dishId]);
 
+    const resetForm = () => {
+        setFormData(INITIAL_DISH_DATA);
+    }
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevData => ({
@@ -105,6 +109,7 @@ function DishForm({ dishId, closeModal, updateDishDetails }) {
                     .then(() => {
                         console.log('Dish created successfully');
                         setShowToast(true);
+                        resetForm()
                     })
                     .catch((error) => {
                         console.error('Error saving dish:', error);
@@ -262,8 +267,10 @@ function DishForm({ dishId, closeModal, updateDishDetails }) {
             <Toast
                 show={showToast}
                 onClose={() => setShowToast(false)}
-                className="position-fixed top-80 end-0 m-3" // Adjusted position
+                className="position-fixed top-80 start-50 translate-middle-x mt-5"
                 style={{ maxWidth: '350px' }}
+                autohide
+                delay={4000} 
             >
                 <Toast.Header closeButton={false}>
                     <strong className="me-auto">Success</strong>
